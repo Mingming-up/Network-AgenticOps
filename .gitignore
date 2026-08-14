@@ -1,0 +1,22 @@
+# Internal progress notes
+NetworkAgent复现日报_*.md
+notes/
+docs/notes/
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
