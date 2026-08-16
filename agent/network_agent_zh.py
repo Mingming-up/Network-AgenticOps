@@ -1,4 +1,4 @@
-# 中文 Network Agent 的默认入口。
+# 中文 Network Agent，也是当前项目的唯一入口。
 # 核心流程：调用 Ollama 分析 -> 解析模型返回的 JSON -> 调用 MCP 工具
 # -> 把工具结果交还给模型 -> 直到模型给出最终结论。
 import asyncio
@@ -24,8 +24,8 @@ PRINT_DELAY = 0.02  # seconds per character for slow printing
 
 # 当前实验只监控一个 VIP、一个用户端口和一个 Access VLAN。
 VIP_IP = "192.168.254.10"
-USER_PORT = "Ethernet3/0"
-ACCESS_VLAN = 100
+USER_PORT = "Ethernet0/3"
+ACCESS_VLAN = 254
 
 # SYSTEM_PROMPT 相当于 Agent 的“排障操作手册”。
 # Template 中的占位符会在末尾由真实实验参数替换；工具名和 JSON 字段必须保持英文。
@@ -155,14 +155,12 @@ async def run_agent_cycle(client: Client, cycle: int):
     # 限制最多 10 步，防止模型反复调用工具形成无限循环。
     for step in range(10):  # max 10 tool calls per cycle
         print(f"\n--- 第 {step + 1} 步：请求 AI 分析 ---")
-        ai_response, thinking, llm_elapsed = call_ollama(messages)
+        ai_response, _thinking, llm_elapsed = call_ollama(messages)
         total_llm_time += llm_elapsed
         print(f"  ⏱️  大模型响应耗时：{llm_elapsed:.2f} 秒")
 
-        if thinking:
-            print(f"\n  💭 AI 分析：")
-            for line in thinking.strip().splitlines():
-                slow_print(f"     {line}")
+        # thinking 是模型不稳定的原始内部推理，可能中英文混用；
+        # 不将它作为面向用户的分析展示，只展示可解析的决策和中文结论。
 
         print(f"\n  🤖 AI 响应：")
         slow_print(f"  {ai_response}")
@@ -208,6 +206,13 @@ async def run_agent_cycle(client: Client, cycle: int):
         if isinstance(tool_args, list) and tool_name == "apply_config":
             tool_args = {"config_list": tool_args}
 
+        # 真实 CML 验收只允许恢复已知目标端口；阻止模型执行泛化配置或修改其他接口。
+        if tool_name in {"no_shutdown", "apply_config"}:
+            allowed = tool_name == "no_shutdown" and tool_args == {"interface": USER_PORT}
+            if not allowed:
+                print(f"  🛑 已阻止未获授权的写工具调用：{tool_name}({tool_args!r})")
+                break
+
         if isinstance(tool_args, dict):
             args_str = ", ".join(f"{k}={v!r}" for k, v in tool_args.items())
         else:
@@ -223,7 +228,7 @@ async def run_agent_cycle(client: Client, cycle: int):
             print(f"  🎯 置信度：{confidence}% [{bar}]")
             if confidence_basis:
                 print(f"     判断依据：{confidence_basis}")
-        # 真正的工具调用发生在这里；当前实验连接的是模拟 MCP Server。
+        # 真正的工具调用发生在这里；当前验收连接的是真实 CML MCP Server。
         mcp_start = time.perf_counter()
         try:
             result = await client.call_tool(tool_name, tool_args)
@@ -263,18 +268,11 @@ async def main():
         tools = await client.list_tools()
         print(f"已连接 MCP。可用工具：{[t.name for t in tools]}")
 
-        cycle = 1
-        # while True:
-        # 学习实验暂时只跑 5 轮；原来的 while True 被保留为持续监控参考。
-        for _ in range(5):
-            try:
-                await run_agent_cycle(client, cycle)
-            except Exception as e:
-                print(f"\n监控周期 #{cycle} 出错：{e}")
-
-            cycle += 1
-            print(f"\n距离下次检查还有 {CHECK_INTERVAL} 秒……")
-            await asyncio.sleep(CHECK_INTERVAL)
+        # 真实设备验收只执行一个完整周期，避免无人值守地重复写配置。
+        try:
+            await run_agent_cycle(client, cycle=1)
+        except Exception as e:
+            print(f"\n监控周期 #1 出错：{e}")
 
 
 if __name__ == "__main__":

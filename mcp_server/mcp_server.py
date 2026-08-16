@@ -1,4 +1,6 @@
-# 这是后续 CML-Free 阶段使用的真实设备连接层，不是当前模拟闭环的 Server。
+"""CML virtual-switch MCP server for the Network-AgenticOps closed loop."""
+
+# 这是已完成 CML-Free/IOL-L2 闭环使用的真实设备连接层。
 # 它接收 Agent 的 MCP 工具调用，再通过 Netmiko 登录隔离的 Cisco 虚拟交换机。
 import os
 
@@ -43,7 +45,9 @@ def greet(name: str) -> str:
 
 def get_connection():
     # 每次工具调用单独建立连接，避免长期保存失效或泄漏的 SSH 会话。
-    return ConnectHandler(**get_device_config())
+    connection = ConnectHandler(**get_device_config())
+    connection.enable()
+    return connection
 
 
 @mcp.tool(description="Retrieve the administrative and operational state of an interface.")
