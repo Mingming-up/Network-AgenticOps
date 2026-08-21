@@ -207,7 +207,7 @@ TcpTestSucceeded : True
 打开 **PowerShell B**，执行：
 
 ```powershell
-Set-Location 'C:\Users\win10\Documents\ChatGPT\Network-AgenticOps'
+Set-Location 'C:\Users\win10\Documents\ChatGPT\enterprise-AiOps'
 
 $env:NETWORK_DEVICE_HOST = '127.0.0.1'
 $env:NETWORK_DEVICE_PORT = '9000'
