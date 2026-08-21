@@ -291,7 +291,7 @@ ping 192.168.254.10
 
 ```powershell
 Set-Location 'C:\Users\win10\Documents\ChatGPT\enterprise-AiOps'
-& '.\networkagent\.venv\Scripts\python.exe' '.\agent\network_agent_zh.py'
+& '.\networkagent\.venv\Scripts\python.exe' '.\agent\chinese_zh\network_agent_zh.py'
 ```
 
 当前代码只执行一个监控周期。运行期间不要关闭：
