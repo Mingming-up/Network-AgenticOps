@@ -290,7 +290,7 @@ ping 192.168.254.10
 在 **PowerShell C** 执行：
 
 ```powershell
-Set-Location 'C:\Users\win10\Documents\ChatGPT\Network-AgenticOps'
+Set-Location 'C:\Users\win10\Documents\ChatGPT\enterprise-AiOps'
 & '.\networkagent\.venv\Scripts\python.exe' '.\agent\network_agent_zh.py'
 ```
 
