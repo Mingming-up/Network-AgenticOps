@@ -1,7 +1,7 @@
-<h1 align="center">🤖 🌐 Network-AgenticOps-Lab</h1>
+<h1 align="center">🤖 🌐 Network-AgenticOps</h1>
 
 <p align="center">
-  <strong>基于本地大模型、MCP 与网络自动化工具的故障诊断与受控修复实验</strong>
+  <strong>基于本地大模型、MCP 与网络自动化工具的故障诊断与受控修复项目</strong>
 </p>
 
 <p align="center">
