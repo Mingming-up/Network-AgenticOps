@@ -1,13 +1,22 @@
-  <div align="center">
+<h1 align="center">🤖 🌐 Network-AgenticOps-Lab</h1>
 
-# 🤖🌐 Network-AgenticOps
+<p align="center">
+  <strong>基于本地大模型、MCP 与网络自动化工具的故障诊断与受控修复实验</strong>
+</p>
 
-**基于本地大模型、MCP 与网络自动化工具的故障诊断与受控修复实验**
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white">
+  <img src="https://img.shields.io/badge/Ollama-gemma4%3A4b-black">
+  <img src="https://img.shields.io/badge/MCP-FastMCP-7C3AED">
+  <img src="https://img.shields.io/badge/CML_Closed_Loop-Passed-22C55E">
+</p>
 
-![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
-![Ollama](https://img.shields.io/badge/Ollama-Gemma-black)
-![MCP](https://img.shields.io/badge/MCP-FastMCP-7C3AED)
-![Status](https://img.shields.io/badge/CML_Closed_Loop-Passed-22C55E)
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/52f59a7d-ccb8-4035-92e6-00b7927a45d2"
+    alt="Network-AgenticOps-Lab"
+    width="600">
+</p>
 
 </div>
 
